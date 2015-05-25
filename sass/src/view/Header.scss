@@ -1,0 +1,17 @@
+$bg-color: #2a3f5d;
+
+
+#app-header {
+  background-color: $bg-color;
+
+  border-bottom: 1px solid darken($bg-color, 15);
+
+}
+
+#app-header-title {
+  padding: 15px 0 10px 0;
+
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+}
