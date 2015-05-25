@@ -6,12 +6,21 @@
     $contentDecoded = json_decode($content, TRUE);
     $output = [];
     if($contentDecoded["results"]["opensearch:totalResults"] != "0"){
-        foreach ($contentDecoded["results"]["artistmatches"]["artist"] as $key => $val) {
-            foreach ($val as $key2 => $val2) {
-                if ($key2 == 'image') {
+        if($contentDecoded["results"]["artistmatches"]["artist"][0]){
+            foreach ($contentDecoded["results"]["artistmatches"]["artist"] as $key => $val) {
+                foreach ($val as $key2 => $val2) {
+                    if ($key2 == 'image') {
+                        continue;
+                    } else $output[$key][$key2] = $val2;
+                }
+            }
+        } else {
+            foreach ($contentDecoded["results"]["artistmatches"]["artist"] as $key => $val) {
+                if ($key == 'image') {
                     continue;
-                } else $output[$key][$key2] = $val2;
+                } else $output[$key] = $val;
             }
         }
     }
+
     echo json_encode($output);
