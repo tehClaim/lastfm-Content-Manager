@@ -10,7 +10,9 @@ Ext.define('LfmTool.view.main.Main', {
     requires: [
         'LfmTool.view.main.MainController',
         'LfmTool.view.main.MainModel',
-        'LfmTool.view.usertools.ContentPanel'
+        'LfmTool.view.Header',
+        'LfmTool.view.usertools.ContentPanel',
+        'Ext.layout.container.Border'
     ],
 
     xtype: 'app-main',

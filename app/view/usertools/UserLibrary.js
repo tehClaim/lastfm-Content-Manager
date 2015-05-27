@@ -2,29 +2,36 @@ Ext.define('LfmTool.view.usertools.UserLibrary', {
     extend: 'Ext.panel.Panel',
     xtype: 'user-library',
     controller: 'user-library',
+    viewModel:{
+        type: 'content-panel'
+    },
     layout: {
         type: 'hbox',
         align: 'stretch'
     },
     requires: [
-        'LfmTool.view.usertools.UserLibraryViewController'
+        'LfmTool.view.usertools.UserLibraryViewController',
+        'LfmTool.view.usertools.ContentPanelViewModel'
     ],
     initComponent: function(){
         var grid = {
             xtype: 'grid',
             reference: 'artistsGrid',
+            itemId: 'artistsGrid',
             selModel: 'rowmodel',
             flex: 1,
             columns:[{
-                text      : 'Artist name',
-                dataIndex : 'name',
+                text: 'Artist name',
+                dataIndex: 'name',
                 flex: 1
             },{
-                text      : 'Play count',
-                dataIndex : 'playcount'
+                text: 'Play count',
+                dataIndex: 'playcount'
             }],
             scrollable: true,
-            store: 'usertools.Artists'
+            bind:{
+                store: '{library}'
+            }
         };
 
         this.items = [grid,{

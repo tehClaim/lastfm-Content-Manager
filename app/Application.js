@@ -3,22 +3,11 @@
  * Ext.application(). This is the ideal place to handle application launch and initialization
  * details.
  */
-Ext.Loader.setConfig({
-    enabled: true,
-    //disableCaching: false,
-    paths: {
-        'Ext': 'ext/src',
-        'LfmTool': 'app'
-
-    }
-});
 
 Ext.require([
-    'LfmTool.Utilities'
+    'LfmTool.Utilities',
+    'LfmTool.view.Login'
 ]);
-
-Ext.require('LfmTool.view.Header');
-Ext.require('LfmTool.view.Login');
 
 Ext.define('LfmTool.Application', {
     extend: 'Ext.app.Application',
@@ -27,22 +16,16 @@ Ext.define('LfmTool.Application', {
 
     stores: [
         // TODO: add global / shared stores here
-        'usertools.Artists',
-        'usertools.Search',
-        'usertools.ArtistTags',
-        'usertools.Wishlist',
-        'usertools.SimilarArtists',
-        'usertools.Albums',
-        'usertools.Tracks'
     ],
-    
+
     launch: function () {
-        // TODO - Launch the application
+        //TODO tmp solution for user data
         Ext.define('SharedData', {
             singleton: true,
             id: '',
             userName: '',
             imageSmall: ''
         });
+        Ext.widget('login').show();
     }
 });

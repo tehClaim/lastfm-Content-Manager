@@ -2,6 +2,12 @@ Ext.define('LfmTool.view.Header', {
     extend: 'Ext.Container',
     xtype: 'app-header',
     id: 'app-header',
+    viewModel:{
+        type: 'header'
+    },
+    requires:[
+        'LfmTool.view.HeaderViewModel'
+    ],
     title: 'last.fm Content Manager',
     height: 52,
     layout: {
@@ -15,10 +21,6 @@ Ext.define('LfmTool.view.Header', {
         this.items = [{
             xtype: 'component',
             cls: 'lastfm-logo'
-            //width: 100,
-            //height: 40,
-            //html: '<i class="fa fa-lastfm"></i>',
-            //glyph: 'xf022@FontAwesome'
         },{
             xtype: 'component',
             id: 'app-header-title',
@@ -30,7 +32,9 @@ Ext.define('LfmTool.view.Header', {
             xtype: 'button',
             glyph: 'xf007@FontAwesome',
             itemId: 'loggedUser',
-            text: 'username',
+            bind:{
+                text: '{userName}'
+            },
             menu:[{
                 text: 'temporary disabled',
                 disabled: true

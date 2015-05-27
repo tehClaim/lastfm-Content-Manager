@@ -1,7 +1,15 @@
 Ext.define('LfmTool.view.usertools.SearchViewController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.search',
-
+    control:{
+        '#searchField':{
+            specialkey: function(field, e){
+                if (e.getKey() == e.ENTER){
+                    this.onSearch();
+                }
+            }
+        }
+    },
     onSearch: function(){
         var searchGrid = this.lookupReference('searchGrid'),
             searchForm = this.lookupReference('searchForm'),
@@ -18,25 +26,6 @@ Ext.define('LfmTool.view.usertools.SearchViewController', {
         } else{
             LfmTool.Utilities.popup.msg('Error!', 'Validation failed!');
         }
-    },
-
-    init: function(){
-        this.control({
-            '#searchField':{
-                specialkey: function(field, e){
-                    if (e.getKey() == e.ENTER){
-                        this.onSearch();
-                    }
-                }
-            },
-
-            'grid':{
-                select: function(row, model){
-                    console.log(model);
-                }
-            }
-        })
     }
-
 
 });

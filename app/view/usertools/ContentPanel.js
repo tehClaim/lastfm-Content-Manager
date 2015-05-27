@@ -8,27 +8,11 @@ Ext.define('LfmTool.view.usertools.ContentPanel', {
         'LfmTool.view.usertools.ArtistDetails'
     ],
 
-    //bodyBorder: false,
-    //controller: 'main',
-    /*viewModel: {
-        type: 'main'
-    },*/
-    /*layout: {
-        type: 'hbox',
-        align: 'stretch',
-        padding: 5
-    },*/
     layout: 'border',
     defaults: {
         collapsible: true,
         split: true
-        //bodyPadding: 10
     },
-    /*layout:{
-        type: 'hbox',
-        align: 'stretch'
-    },*/
-
     items: [{
         xtype: 'NavigationTabs',
         region: 'center',

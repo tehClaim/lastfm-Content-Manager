@@ -1,8 +1,7 @@
 Ext.define('LfmTool.view.usertools.WishlistViewController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.wishlist',
-
-    onRemoveFromWishlist: function(button){
+    onRemoveFromWishlist: function(){
         var grid = this.lookupReference('wishlistGrid'),
             store = grid.getStore(),
         	selection = grid.getView().getSelectionModel().getSelection()[0];

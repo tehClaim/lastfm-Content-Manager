@@ -6,10 +6,6 @@ Ext.define('LfmTool.view.usertools.NavigationTabs', {
         'LfmTool.view.usertools.Search',
         'LfmTool.view.usertools.Wishlist'
     ],
-    //controller: 'main',
-    /*viewModel: {
-     type: 'main'
-     },*/
     layout:{
         type:' fit'
     },

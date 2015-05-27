@@ -8,7 +8,6 @@ try {
     $userName = strtolower($userName);
     $content = file_get_contents("http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=$userName&api_key=$API_KEY&format=json");
     $contentDecoded = json_decode($content, TRUE);
-    //var_dump($contentDecoded);
     if(!$contentDecoded['error']){
         //search for id in local db
         $stmt = $conn->prepare("

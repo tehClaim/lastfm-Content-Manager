@@ -13,10 +13,7 @@ Ext.define('LfmTool.view.usertools.ArtistDetails', {
         padding: 5
     },
     viewModel:{
-        type: 'artists-details',
-        data:{
-            image: '{rec.image}'
-        }
+        type: 'artists-details'
     },
     bind:{
       title: '{rec.name}'
@@ -34,7 +31,7 @@ Ext.define('LfmTool.view.usertools.ArtistDetails', {
             items:[{
                 xtype: 'container',
                 minWidth: 252,
-                minHeight: 200,
+                minHeight: 100,
                 items: [{
                     xtype: 'image',
                     itemId: 'artistImage',
@@ -52,7 +49,6 @@ Ext.define('LfmTool.view.usertools.ArtistDetails', {
                 xtype: 'button',
                 viewOnly: false, //custom config for stop firing click event when button toggled
                 itemId: 'wishlistStatus',
-                //hidden: true,
                 enableToggle: true,
                 allowDepress: false,
                 handler: 'onWishlistStatusClick'
@@ -102,15 +98,19 @@ Ext.define('LfmTool.view.usertools.ArtistDetails', {
         var similarArtists = {
             title: 'Similar Artists',
             reference: 'similarArtists',
-            store: 'usertools.SimilarArtists',
+            itemId: 'similarArtists',
             xtype: 'grid',
             scrollable: true,
+            bind:{
+                store: '{similar}'
+            },
             columns:[{
                 text: 'Photo',
                 renderer: function(value){
                     return '<img src="' + value + '" />';
                 },
                 dataIndex: 'imageVerySmall',
+                width: 100,
                 sortable: false
             },{
                 text: 'Artist name',
@@ -127,15 +127,18 @@ Ext.define('LfmTool.view.usertools.ArtistDetails', {
             title: 'Albums',
             reference: 'Albums',
             itemId: 'albums',
-            store: 'usertools.Albums',
             xtype: 'grid',
             scrollable: true,
+            bind:{
+                store: '{albums}'
+            },
             columns:[{
                 text: 'Photo',
                 renderer: function(value){
                     return '<img src="' + value + '" />';
                 },
                 dataIndex: 'image',
+                width: 100,
                 sortable: false
             },{
                 text: 'Artist name',
@@ -152,41 +155,30 @@ Ext.define('LfmTool.view.usertools.ArtistDetails', {
         var artistDetails = {
             title: 'Artist Details',
             scrollable: true,
-            //height: 482,
-            //bodyStyle: 'background-color: transparent;',
-            frame: true,
             layout: {
                 type: 'vbox',
                 align: 'stretch'
-
-
             },
             defaults:{
                 margin: '0 0 0 10',
                 labelWidth: 70
-                //width: '100%'
             },
-            //flex: 1,
             items:[{
                 xtype: 'displayfield',
                 fieldLabel: 'Name',
-                //labelWidth: 70,
                 bind: '{rec.name}'
             },{
                 xtype: 'displayfield',
-                //labelWidth: 70,
                 fieldLabel: 'Listeners',
                 renderer: Ext.util.Format.numberRenderer('0,000'),
                 bind: '{rec.listeners}'
             },{
                 xtype: 'displayfield',
-                //labelWidth: 70,
                 fieldLabel: 'Playcount',
                 renderer: Ext.util.Format.numberRenderer('0,000'),
                 bind: '{rec.totalPlaycount}'
             },{
                 xtype: 'checkbox',
-                //labelWidth: 70,
                 fieldLabel: 'On tour',
                 readOnly: true,
                 bind: '{rec.ontour}'
@@ -199,24 +191,21 @@ Ext.define('LfmTool.view.usertools.ArtistDetails', {
                 bind:{
                     html: '{rec.bio}'
                 },
-                //bodyPadding: 5,
-                //collapsible: true,
-                //collapsed: true,
                 minHeight: 200,
                 maxHeight: 300,
-
                 autoScroll: true
             }]
         };
 
         var artistTopTracks = {
+            xtype: 'grid',
             title: 'Top Tracks',
             reference: 'topTracks',
-            store: 'usertools.Tracks',
-            xtype: 'grid',
-            //flex: 1,
+            itemId: 'topTracks',
+            bind:{
+                store: '{tracks}'
+            },
             scrollable: true,
-            //height: '100%',
             columns:[{
                 text: 'Track name',
                 dataIndex: 'name',
@@ -235,12 +224,9 @@ Ext.define('LfmTool.view.usertools.ArtistDetails', {
             height: '100%',
             layout: {
                 type: 'accordion',
-                animate: true,
-                fill: true
-                //padding: 10
+                animate: true
             },
             defaults:{
-                //width: '100%'
                 height: '100%'
             },
             items:[artistDetails, artistTopTracks, artistAlbums, similarArtists]
@@ -266,19 +252,13 @@ Ext.define('LfmTool.view.usertools.ArtistDetails', {
 
     showContent: function(show){
         var rightSide = this.down('#rightSide'),
-            artistImage = this.down('#artistImage'),
-            leftSide = this.down('#leftSide'),
-            wishlistStatus = this.down('#wishlistStatus');
+            leftSide = this.down('#leftSide');
         if(show){
             rightSide.show();
-            //artistImage.show();
             leftSide.show();
-            //wishlistStatus.show();
         } else{
             rightSide.hide();
-            //artistImage.hide();
             leftSide.hide();
-            //wishlistStatus.hide();
         }
     }
 });

@@ -2,51 +2,25 @@ Ext.define('LfmTool.view.usertools.Search', {
     extend: 'Ext.panel.Panel',
     xtype: 'search',
     controller: 'search',
+    viewModel:{
+        type: 'content-panel'
+    },
     requires: [
-        'LfmTool.view.usertools.SearchViewController'
+        'LfmTool.view.usertools.SearchViewController',
+        'LfmTool.view.usertools.ContentPanelViewModel'
     ],
-    //store: 'usertools.Artists',
     layout: {
         type: 'hbox',
         align: 'stretch'
     },
-    /*items:[{
-        xtype: 'grid',
-        reference: 'searchGrid',
-        store: 'usertools.Search',
-        columns: [{
-            text      : 'Artist name',
-            dataIndex : 'name',
-            flex: 1
-        },{
-            text      : 'Listeners count',
-            dataIndex : 'listeners'
-        }],
-        flex: 1
-    },{
-        xtype: 'panel',
-        layout:{
-            type: 'vbox',
-            padding: 10
-        },
-        items:[{
-            xtype: 'textfield',
-            fieldLabel: 'Name',
-            reference: 'searchField'
-        },{
-            xtype: 'button',
-            text: 'Search',
-            handler: 'onSearch',
-            width: 200
-        }],
-        width: 500
-    }],*/
 
     initComponent: function(){
         var grid = {
             xtype: 'grid',
             reference: 'searchGrid',
-            store: 'usertools.Search',
+            bind:{
+                store: '{search}'
+            },
             columns: [{
                 text      : 'Artist name',
                 dataIndex : 'name',

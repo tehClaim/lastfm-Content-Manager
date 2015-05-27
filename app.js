@@ -6,9 +6,9 @@
 Ext.application({
     name: 'LfmTool',
 
-    extend: 'LfmTool.Application',
+    extend: 'LfmTool.Application'
     
-    autoCreateViewport: 'LfmTool.view.main.Main'
+    //autoCreateViewport: 'LfmTool.view.main.Main'
 	
     //-------------------------------------------------------------------------
     // Most customizations should be made to LfmTool.Application. If you need to

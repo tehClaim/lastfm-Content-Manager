@@ -1,18 +1,21 @@
 Ext.define('LfmTool.view.usertools.Wishlist', {
     extend: 'Ext.panel.Panel',
     xtype: 'wishlist',
+    viewModel:{
+        type: 'wishlist'
+    },
     controller: 'wishlist',
     layout: {
         type: 'fit'
     },
     requires: [
-        'LfmTool.view.usertools.WishlistViewController'
+        'LfmTool.view.usertools.WishlistViewController',
+        'LfmTool.view.usertools.WishlistViewModel'
     ],
     initComponent: function(){
         var grid = {
             xtype: 'grid',
             reference: 'wishlistGrid',
-            //selModel: 'rowmodel',
             flex: 1,
             columns:[{
                 text: 'Photo',
@@ -29,10 +32,7 @@ Ext.define('LfmTool.view.usertools.Wishlist', {
                 text: 'Tag',
                 width: 200,
                 dataIndex: 'tag0'
-            },/*{
-                text: 'Playcount',
-                dataIndex: 'playcount'
-            },*/{
+            },{
                 text: 'Added',
                 width: 100,
                 xtype: 'datecolumn',
@@ -40,7 +40,9 @@ Ext.define('LfmTool.view.usertools.Wishlist', {
                 dataIndex: 'added'
             }],
             scrollable: true,
-            store: 'usertools.Wishlist',
+            bind:{
+                store: '{wishlist}'
+            },
             tbar:[{
                 xtype: 'button',
                 text: 'Remove from wishlist',

@@ -1,6 +1,22 @@
 Ext.define('LfmTool.view.usertools.UserLibraryViewController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.user-library',
+    control:{
+        '#myLibrary':{
+            change: function(field, newValue){
+                var view = this.getView();
+                view.disableUsername(newValue);
+            }
+        },
+
+        '#username':{
+            specialkey: function(field, e){
+                if (e.getKey() == e.ENTER){
+                    this.onSearch();
+                }
+            }
+        }
+    },
 
     onSearch: function(){
         var userName,
@@ -9,7 +25,7 @@ Ext.define('LfmTool.view.usertools.UserLibraryViewController', {
             myLibrary = this.lookupReference('myLibrary').getValue(),
             period = this.lookupReference('period').getValue();
         if(userLibraryForm.isValid()){
-            if(myLibrary == true) userName = SharedData.userName;
+            if(myLibrary) userName = SharedData.userName;
             else userName = this.lookupReference('username').getValue();
             artistsGrid.getStore().load({
                 params:{
@@ -23,24 +39,6 @@ Ext.define('LfmTool.view.usertools.UserLibraryViewController', {
         } else{
             LfmTool.Utilities.popup.msg('Error!', 'Validation failed!');
         }
-    },
-
-    init: function(){
-        this.control({
-            '#myLibrary':{
-                change: function(field, newValue){
-                    var view = this.getView();
-                    view.disableUsername(newValue);
-                }
-            },
-
-            '#username':{
-                specialkey: function(field, e){
-                    if (e.getKey() == e.ENTER){
-                        this.onSearch();
-                    }
-                }
-            }
-        })
     }
+
 });

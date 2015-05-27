@@ -13,7 +13,18 @@ Ext.define('LfmTool.view.main.MainController', {
     ],
 
     alias: 'controller.main',
-
+    control:{
+        'viewport':{
+            afterrender: function(viewport){
+                viewport.down('app-header').getViewModel().setData({userName: SharedData.userName});
+                viewport.down('wishlist').getViewModel().getStore('wishlist').load({
+                    params:{
+                        userId: SharedData.id
+                    }
+                });
+            }
+        }
+    },
     onClickButton: function () {
         Ext.Msg.confirm('Confirm', 'Are you sure?', 'onConfirm', this);
     },
@@ -22,16 +33,5 @@ Ext.define('LfmTool.view.main.MainController', {
         if (choice === 'yes') {
             //
         }
-    },
-
-    init: function() {
-        this.control({
-            'viewport':{
-                afterrender: function(viewport){
-                    Ext.create('LfmTool.view.Login').show();
-                }
-            }
-
-        })
     }
 });

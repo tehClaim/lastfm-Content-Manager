@@ -7,11 +7,11 @@ Ext.define('LfmTool.view.Login', {
     xtype: 'login',
     title: 'Login',
     layout: 'fit',
-    height: 200,
+    height: 210,
     width: 320,
     constrain: true,
+    resizable: false,
     closable: false,
-
     initComponent: function() {
         var form = {
             xtype: 'form',
@@ -24,11 +24,12 @@ Ext.define('LfmTool.view.Login', {
             },
             defaults:{
                 width: '100%',
-                labelWidth: 80
+                labelWidth: 80,
+                margin: '0 0 5 0'
             },
             items: [{
-                xtype: 'displayfield',
-                value: 'Provide your login information from last.fm'
+                xtype: 'container',
+                html: 'Provide your last.fm account information <br> Pseudo authentification enabled for testing purpose'
             },{
                 allowBlank: false,
                 fieldLabel: 'Username',
