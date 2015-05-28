@@ -12,16 +12,19 @@ Ext.define('LfmTool.view.usertools.Wishlist', {
         'LfmTool.view.usertools.WishlistViewController',
         'LfmTool.view.usertools.WishlistViewModel'
     ],
+    reference: 'wishlist',
     initComponent: function(){
         var grid = {
             xtype: 'grid',
             reference: 'wishlistGrid',
+            itemId: 'wishlistGrid',
             flex: 1,
             columns:[{
                 text: 'Photo',
                 renderer: function(value){
                     return '<img src="' + value + '" />';
                 },
+                width: 145,
                 dataIndex: 'imageSmall',
                 sortable: false
             },{

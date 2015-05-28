@@ -7,7 +7,7 @@ Ext.define('LfmTool.view.Login', {
     xtype: 'login',
     title: 'Login',
     layout: 'fit',
-    height: 210,
+    height: 230,
     width: 320,
     constrain: true,
     resizable: false,
@@ -29,7 +29,7 @@ Ext.define('LfmTool.view.Login', {
             },
             items: [{
                 xtype: 'container',
-                html: 'Provide your last.fm account information <br> Pseudo authentification enabled for testing purpose'
+                html: 'Provide your last.fm account information <br> Pseudo authentification enabled for testing purpose<br>If you don&#8216;t have account, click &#8216;Guest session&#8216;.'
             },{
                 allowBlank: false,
                 fieldLabel: 'Username',

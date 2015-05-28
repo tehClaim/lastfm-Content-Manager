@@ -6,13 +6,23 @@ Ext.define('LfmTool.view.usertools.ContentPanelViewController',{
             itemdblclick: function (view, record) {
                 if(view.ownerCt.itemId == 'topTracks' || view.ownerCt.itemId == 'albums') return false; //exception
                 //TODO realize how to do it in MVVM style, when child components have their own vc
-                var ajaxSuccess = false, // for sync custom ajax request callback with stores
+                var grid = view.ownerCt,
+                    store = grid.getStore(),
+                    ajaxSuccess = false, // for sync custom ajax request callback with stores
                     artistDetails = this.lookupReference('artistDetails'),
+                    artistDetailsVM = artistDetails.getViewModel(),
                     tagsTab = this.lookupReference('tagsTab'),
+                    gridToMask = this.getView().down('navigation-tabs').getActiveTab().down('grid'),//TODO tmp solution, because you could fast switch tab and load from unmasked grid
+                    artistImage = this.lookupReference('artistImage'),
                     similarArtistsStore = this.lookupReference('similarArtists').getStore(),
                     albumsStore = this.lookupReference('Albums').getStore(),
                     topTracks = this.lookupReference('topTracks').getStore(),
                     storesToLoad = [similarArtistsStore, albumsStore, topTracks];
+                if(artistDetailsVM.data.rec){
+                    if(artistDetailsVM.data.rec.get('name') == record.get('name')) return false; //return false if artist details is already loaded
+                }
+                gridToMask.mask();//mask grid while loading
+                artistImage.imageReady = false; //set imageRdy to false for w8ing till loaded(will set true in image rdy event)
                 artistDetails.showContent(false);
                 artistDetails.add({
                     xtype: 'progressbar',
@@ -34,17 +44,19 @@ Ext.define('LfmTool.view.usertools.ContentPanelViewController',{
                         callback: function(records, operation, success) {
                             if (success) {
                                 if (LfmTool.Utilities.multiCallback(storesToLoad) && ajaxSuccess) {
-                                    artistDetails.remove(pbar);
-                                    artistDetails.showContent(true);
-                                    this.prepareTagsTab(tagsTab);
+                                    if(artistImage.imageReady){
+                                        this.prepareArtistDetailsToShow(artistDetails, pbar, tagsTab, gridToMask);
+                                    }
                                 }
                             } else{
+                                this.prepareArtistDetailsToShow(artistDetails, pbar, tagsTab, gridToMask);
                                 LfmTool.Utilities.popup.msg('Error!', 'Something went wrong!');
                             }
                         },
                         scope: this
                     })
                 };
+
 
                 this.checkArtistOnWishlist(SharedData.userName, record.get('mbid'));
                 Ext.Ajax.request({
@@ -60,6 +72,8 @@ Ext.define('LfmTool.view.usertools.ContentPanelViewController',{
                                 image: output.image
                             })
                         }
+
+
                         record.set({
                             imageSmall: output.imageSmall,
                             bio: output.bio,
@@ -72,19 +86,23 @@ Ext.define('LfmTool.view.usertools.ContentPanelViewController',{
                             tag3: output.tag3,
                             tag4: output.tag4
                         });
+                        store.commitChanges();//dont need to sync
                         //TODO figure it out, setData is async?
                         artistDetails.getViewModel().setData({rec: record});
+
                         if(LfmTool.Utilities.multiCallback(storesToLoad) && ajaxSuccess){
-                            artistDetails.remove(pbar);
-                            artistDetails.showContent(true);
-                            this.prepareTagsTab(tagsTab);
+                            if(artistImage.imageReady){
+                                this.prepareArtistDetailsToShow(artistDetails, pbar, tagsTab, gridToMask);
+                            };
                         }
                     },
                     failure: function(){
+                        this.prepareArtistDetailsToShow(artistDetails, pbar, tagsTab, gridToMask);
                         LfmTool.Utilities.popup.msg('Error!', 'Something went wrong!');
                     },
                     scope: this
                 });
+
             }
         },
 
@@ -128,6 +146,42 @@ Ext.define('LfmTool.view.usertools.ContentPanelViewController',{
         }
     },
 
+    prepareArtistDetailsToShow: function(artistDetails, pbar, tagsTab, grid){
+        var activeTab = tagsTab.getActiveTab(),
+            activeTabIndex = tagsTab.items.findIndex('id', activeTab.id);
+        artistDetails.remove(pbar);
+        if(activeTabIndex == 0) tagsTab.setActiveTab(1);
+        else tagsTab.setActiveTab(0);
+        grid.unmask();
+        artistDetails.showContent(true);
+
+    },
+
+    imgReady: function(e, t, eOpts){
+        var contentPanel = this.getView(),
+            leftside = contentPanel.down('#leftSide'),
+            artistDetails = contentPanel.down('artist-details'),
+            artistImage = this.lookupReference('artistImage'),
+            similarArtists = this.lookupReference('similarArtists'),
+            albums = this.lookupReference('Albums'),
+            topTracks = this.lookupReference('topTracks'),
+            storesToLoad = [similarArtists.getStore(), albums.getStore(), topTracks.getStore()];
+        leftside.doLayout();
+        artistImage.imageReady = true;
+        if(artistDetails.firstRender) {
+            artistDetails.showContent(false);
+            artistDetails.firstRender = false;
+        } else{
+            //tmp solution for sync image ready event with stores, checking only stores because image updates after ajax request
+            if(LfmTool.Utilities.multiCallback(storesToLoad)){
+                var pbar = artistDetails.down('#pbarPanel'),
+                    tagsTab = this.lookupReference('tagsTab'),
+                    grid = contentPanel.down('navigation-tabs').getActiveTab().down('grid');
+                this.prepareArtistDetailsToShow(artistDetails, pbar, tagsTab, grid);
+            }
+        }
+    },
+
     onLoadTagInfo: function(button){
         var tagInfo = this.lookupReference('tagInfo'),
             value = button.text;
@@ -152,7 +206,7 @@ Ext.define('LfmTool.view.usertools.ContentPanelViewController',{
             var artistDetails = button.up('artist-details'),
                 record = artistDetails.getViewModel().data.rec,
                 wishlist = button.up('content-panel').down('wishlist grid'),
-                store = wishlist.getStore();
+                store = button.up('content-panel').down('wishlist').getViewModel().getStore('wishlist');
             var model = store.getModel().create({
                 name: record.get('name'),
                 tag0: record.get('tag0'),
@@ -198,12 +252,6 @@ Ext.define('LfmTool.view.usertools.ContentPanelViewController',{
             },
             scope: this
         });
-    },
-
-    prepareTagsTab: function(tagsTab){
-        var activeTab = tagsTab.getActiveTab(),
-            activeTabIndex = tagsTab.items.findIndex('id', activeTab.id);
-        if(activeTabIndex == 0) tagsTab.setActiveTab(1);
-        else tagsTab.setActiveTab(0);
     }
+
 });

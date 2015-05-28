@@ -1,6 +1,6 @@
 Ext.define('LfmTool.view.usertools.NavigationTabs', {
     extend: 'Ext.tab.Panel',
-    xtype: 'NavigationTabs',
+    xtype: 'navigation-tabs',
     requires: [
         'LfmTool.view.usertools.UserLibrary',
         'LfmTool.view.usertools.Search',

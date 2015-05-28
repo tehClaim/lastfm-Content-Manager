@@ -18,6 +18,7 @@ Ext.define('LfmTool.view.usertools.ArtistDetails', {
     bind:{
       title: '{rec.name}'
     },
+    firstRender: true,//custom config for imgReady function to hide elements after image ready (only for first load)
     initComponent: function() {
         var leftSide = {
             bodyStyle: 'background-color: transparent;',
@@ -29,24 +30,30 @@ Ext.define('LfmTool.view.usertools.ArtistDetails', {
                 align: 'begin'
             },
             items:[{
-                xtype: 'container',
-                minWidth: 252,
-                minHeight: 100,
-                items: [{
-                    xtype: 'image',
-                    itemId: 'artistImage',
-                    border: 3,
-                    style: {
-                        borderColor: 'black',
-                        borderStyle: 'solid'
-                    },
-                    src: 'resources/images/nophoto.png',
-                    bind:{
-                        src: '{rec.image}'
+                xtype: 'image',
+                itemId: 'artistImage',
+                reference: 'artistImage',
+                imageReady: false,//custom config for syncing image ready event with loading data to artist details
+                width: 252,
+                minHeight: 200,
+                border: 3,
+                style: {
+                    borderColor: 'black',
+                    borderStyle: 'solid'
+                },
+                src: 'resources/images/nophoto.png',
+                listeners : {
+                    load : {
+                        element : 'el',
+                        fn : 'imgReady'
                     }
-                }]
+                },
+                bind:{
+                    src: '{rec.image}'
+                }
             },{
                 xtype: 'button',
+                margin: '10 0 0 0',
                 viewOnly: false, //custom config for stop firing click event when button toggled
                 itemId: 'wishlistStatus',
                 enableToggle: true,
@@ -256,9 +263,11 @@ Ext.define('LfmTool.view.usertools.ArtistDetails', {
         if(show){
             rightSide.show();
             leftSide.show();
+            this.updateLayout();
         } else{
             rightSide.hide();
             leftSide.hide();
+            this.updateLayout();
         }
     }
 });

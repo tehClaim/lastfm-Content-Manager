@@ -3,7 +3,8 @@ Ext.define('LfmTool.view.usertools.WishlistViewController', {
     alias: 'controller.wishlist',
     onRemoveFromWishlist: function(){
         var grid = this.lookupReference('wishlistGrid'),
-            store = grid.getStore(),
+            wishlistVM = this.getViewModel(),
+            store = wishlistVM.getStore('wishlist'),
         	selection = grid.getView().getSelectionModel().getSelection()[0];
         if (selection) {
             Ext.Msg.show({
@@ -12,15 +13,19 @@ Ext.define('LfmTool.view.usertools.WishlistViewController', {
                 buttons: Ext.Msg.YESNO,
                 icon: Ext.Msg.QUESTION,
                 fn: function(rec) {
-                    if (rec === "yes") store.remove(selection);
-                    store.sync({
-                        success: function(){
-                            LfmTool.Utilities.popup.msg('Success!',selection.get('name')+' successfully removed from wishlist!');
-                        },
-                        failure: function() {
-                            LfmTool.Utilities.popup.msg('Error!', 'Something went wrong!');
-                        }
-                    });
+                    if (rec === "yes") {
+                        store.remove(selection);
+                        store.sync({
+                            success: function () {
+                                LfmTool.Utilities.popup.msg('Success!', selection.get('name') + ' successfully removed from wishlist!');
+                                grid.doLayout();
+                            },
+                            failure: function () {
+                                LfmTool.Utilities.popup.msg('Error!', 'Something went wrong!');
+                            }
+                        });
+                    }
+
                 }
             });
         } else{

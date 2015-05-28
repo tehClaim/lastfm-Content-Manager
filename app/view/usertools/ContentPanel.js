@@ -14,7 +14,7 @@ Ext.define('LfmTool.view.usertools.ContentPanel', {
         split: true
     },
     items: [{
-        xtype: 'NavigationTabs',
+        xtype: 'navigation-tabs',
         region: 'center',
         collapsible: false
     },{
